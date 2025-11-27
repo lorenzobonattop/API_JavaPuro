@@ -1,5 +1,6 @@
 package server;
 
+import server.exceptions.HttpServerException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,13 +14,17 @@ public class HttpServer {
         this.port = port;
     }
 
-    public void start() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(port);
-        System.out.println("Server iniciado na porta: " + port);
+    public void start() throws HttpServerException {
+        try{
+            ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Server iniciado na porta: " + port);
 
-        while (true){
-            Socket client  = serverSocket.accept();
-            System.out.println("Acesso Conectado");
+            while(true){
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Cliente conectado: " + clientSocket.getInetAddress().getHostAddress());
+            }
+        } catch (IOException e){
+            throw new HttpServerException("Erro ao iniciar o servidor na porta:" + port, e);
         }
     }
 }
